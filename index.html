@@ -23,8 +23,13 @@
     <div class="container"> 
         <div id="playerJedi"></div>
         <div id="textField"></div>
+        <div id="enemyJedi"></div>
+        <button id ="fight">FIGHT</button>
+        <div id="textField2"></div>
+        
         <div id="pickJedi"></div>
         <div id="pickEnemyJedi"></div>
+        
     </div>
 
     <script>
@@ -64,7 +69,7 @@
 
             this.attack = function()
             {
-                var temp = tcurrent;
+                var temp = this.currentAtk;
                 this.currentAtk += this.baseAtk;
                 return temp;
             };
@@ -95,10 +100,10 @@
                     return new jedi("Luke Skywalker", "Assets/Images/lukeskywalker.jpg");
                     break;
                 case "Darth Vader":
-                    return new jedi("Darth Vader");
+                    return new jedi("Darth Vader", "Assets/Images/darthvader.jpg");
                     break;
-                case "Emperor Palpatine":
-                    return new jedi("Emperor Palpatine");
+                case "Darth Maul":
+                    return new jedi("Darth Maul", "Assets/Images/darthmaul.jpg");
                     break;
                 default:
                     return "Error jedi not found";
@@ -111,7 +116,7 @@
             mapToPop.set("Obi-Wan Kenobi", createJedi("Obi-Wan Kenobi"));
             mapToPop.set("Luke Skywalker", createJedi("Luke Skywalker"));
             mapToPop.set("Darth Vader", createJedi("Darth Vader"));
-            mapToPop.set("Emperor Palpatine", createJedi("Emperor Palpatine"));
+            mapToPop.set("Darth Maul", createJedi("Darth Maul"));
         }
 
         function pickJedi(jediPicked, mapIn)
@@ -149,11 +154,24 @@
             gameState = "pickChar";
         }
 
+        function clearScreen()
+        {
+            $("#pickJedi").empty();
+            $("#playerJedi").empty();
+            $("#enemyJedi").empty();
+            $("#pickEnemyJedi").empty();
+            $("#textField").empty();
+            $("#textField2").empty();
+            $("#fight").hide();
+        }
+        
         function draw()
         {
+            clearScreen();
             switch(gameState)
             {
                 case "pickChar":
+                    
                     for(let i of pickableJedi.values())
                     {
                         $("#pickJedi").append("<img src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
@@ -161,12 +179,11 @@
                     $("#textField").text("Pick Your Jedi");
                     
                     //disable other graphics
-                    $("#playerJedi").empty();
-                    $("#enemyJedi").empty();
-                    $("#pickEnemyJedi").empty();
+
                     break;
+
                 case "pickAttacker":
-                    
+
                     $("#playerJedi").append("<img src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">");
                     for(let i of pickableJedi.values())
                     {
@@ -174,10 +191,10 @@
                     }
 
                     $("#textField").text("Pick your enemy");
-                    $("#enemyJedi").empty();
-                    $("#pickJedi").empty();
                     break;
+
                 case "fight":
+                    $("#fight").show();
                     for(let i of pickableJedi.values())
                     {
                         $("#pickEnemyJedi").append("<img src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
@@ -185,11 +202,13 @@
                     $("#playerJedi").append("<img src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">");
 
                     $("#enemyJedi").append("<img src=\"" + curEnemy.image + "\" jediName=\"" + curEnemy.name + "\">");
-                    $("#textField").text("Fight your enemy");
-                    $("#pickJedi").empty();
+                    $("#textField").text("Versus");
+                    $("#textField2").text("Enemies remaining");
                     break;
+
                 case "win":
                     break;
+
                 case "loss":
                     break;
             }
@@ -210,7 +229,7 @@
             }
         });
 
-        $("#pickEnemy").click(function(event) 
+        $("#pickEnemyJedi").click(function(event) 
         {
             if(gameState == "pickAttacker")
             {
@@ -241,7 +260,8 @@
                 {
                     gameState = "loss";
                 }
-
+                console.log(playerJedi.hp);
+                console.log(curEnemy.hp);
                 draw();
             }
         });
