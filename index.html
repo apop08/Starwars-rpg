@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Correct Color Picker</title>
+
+  <!-- Bootstrap File -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery.js"></script>
+
+  <style>
+    #rand-target-color,
+    #color-picker li {
+      font-size: 24px;
+    }
+  </style>
+
+</head>
+<body>
+
+  <div class="container">
+    <h2>Correct Color Picker</h2>
+    <p>Pick the <b>color</b> of the word shown from the list below it.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">
+
+          <!-- Create random target color -->
+          <span id="rand-target-color">
+          </span>
+
+        </h3>
+      </div>
+      <div class="card-body">
+
+        <!-- Create colors to pick -->
+        <ul class="list-unstyled" id="color-picker">
+        </ul>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    // JavaScript function that wraps everything
+    $(document).ready(function() 
+    {
+        var jediList = new Map();
+        var playerJedi;
+
+        function jedi(initName = "", initImage = "", initHp = 0, initAttack = 0, initCounterAtk = 0)
+        {
+            this.name = initName;
+            this.image = initImage;
+            this.hp = initHp;
+            this.baseAtk = initAttack;
+            this.totalAtk = initAttack;
+            this.counterAtk = initCounterAtk;
+            this.isDead = function()
+            {
+                if(this.hp == 0)
+                {
+                    return true;
+                }
+                return false;
+            };
+
+            this.attack = function()
+            {
+                var temp = this.totalAtk;
+                this.totalAtk += this.baseAtk;
+                return temp;
+            };
+
+            this.counter = function()
+            {
+                return this.counterAtk;
+            }
+
+            this.takeDmg = function(atk)
+            {
+                this.hp -= atk;
+                return this.isDead();
+            };
+            
+            return this;
+        }
+
+
+        function createJedi(name)
+        {
+            switch(name)
+            {
+                case "Obi-Wan Kenobi":
+                    return new jedi("Obi-Wan Kenobi");
+                    break;
+                case "Luke Skywalker":
+                    return new jedi("Luke Skywalker");
+                    break;
+                case "Darth Vader":
+                    return new jedi("Darth Vader");
+                    break;
+                case "Emperor Palpatine":
+                    return new jedi("Emperor Palpatine");
+                    break;
+                default:
+                    return "Error jedi not found";
+            }
+        }
+        
+
+        function populatePickList(mapToPop)
+        {
+            mapToPop.set("Obi-Wan Kenobi", createJedi("Obi-Wan Kenobi"));
+            mapToPop.set("Luke Skywalker", createJedi("Luke Skywalker"));
+            mapToPop.set("Darth Vader", createJedi("Darth Vader"));
+            mapToPop.set("Emperor Palpatine", createJedi("Emperor Palpatine"));
+        }
+
+        function pickJedi(jediPicked, mapIn)
+        {
+            var temp = mapIn.get(jediPicked);
+            mapIn.delete(jediPicked);
+            return temp;
+        }
+
+        function load()
+        {
+            populatePickList(jediList);
+        }
+        
+        function reset()
+        {
+            jediList.clear();
+            populatePickList(jediList);
+        }
+        
+        load();
+        playerJedi = pickJedi("Luke Skywalker", jediList);
+
+      reset();
+    });
+
+  </script>
+</body>
+</html>
