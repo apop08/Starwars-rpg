@@ -51,7 +51,9 @@
     {
         var jediList = new Map();
         var playerJedi = null;
-
+        var gameState = "";
+        var curEnemy = null;
+        var pickableJedi = new Map();
         function jedi(initName = "", initImage = "", initStartHp = 0, initAttack = 0, initCounterAtk = 0)
         {
             this.name = initName;
@@ -139,11 +141,17 @@
         function load()
         {
             populatePickList(jediList);
+            gameState = "pickChar";
+            draw();
         }
 
-        function init(jediString)
+        function init()
         {
-            return pickJedi(jediString, jediList);
+            for(let i of jediList)
+            {
+                pickableJedi.set(i[0], i[1]);
+            }
+            
         }
         
         function reset()
@@ -155,13 +163,84 @@
             }
 
             playerJedi = null;
+            init();
+            gameState = "pickChar";
         }
-        
+
+        function draw()
+        {
+
+        }
+
         load();
+        init();
 
-        playerJedi = init("Luke Skywalker");
+        $("#pickJedi").click(function(event) 
+        {
+            if(gameState == "pickChar")
+            {
+                var jedi = $(event.target).attr("jediName");
+                playerJedi = pickJedi(jedi, pickableJedi);
+                gameState = "pickAttacker";
+                draw();
+            }
+        });
 
-        reset();
+        $("#pickEnemy").click(function(event) 
+        {
+            if(gameState == "pickAttacker")
+            {
+                var jedi = $(event.target).attr("jediName");
+                curEnemy = pickJedi(jedi, pickableJedi);
+                gameState = "Fight";
+                draw();
+            }
+        });
+
+        $("#fight").click(function(event) 
+        {
+            if(gameState == "fight")
+            {
+                if(curEnemy.takeDmg(playerJedi.attack()))
+                {
+                    if(pickableJedi.size == 0)
+                    {
+                        gameState = "win";
+                    }
+                    else
+                    {
+                        gameState = "pickAttacker";
+                    }
+                    
+                }
+                else if(playerJedi.takeDmg(curEnemy.counter()))
+                {
+                    gameState = "loss";
+                }
+
+                draw();
+            }
+        });
+
+
+        $("#replay").click(function(event) 
+        {
+            reset();
+            draw();
+        });
+
+        $("#pickEnemy").click(function(event) 
+        {
+            if(gameState == "pickAttacker")
+            {
+                var jedi = $(event.target).attr("jediName");
+                curEnemy = pickJedi(jedi, pickableJedi);
+                gameState = "Fight";
+                draw();
+            }
+        });
+
+        //reset();
     });
 
   </script>
