@@ -20,31 +20,14 @@
 </head>
 <body>
 
-  <div class="container">
-    <h2>Correct Color Picker</h2>
-    <p>Pick the <b>color</b> of the word shown from the list below it.</p>
-
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">
-
-          <!-- Create random target color -->
-          <span id="rand-target-color">
-          </span>
-
-        </h3>
-      </div>
-      <div class="card-body">
-
-        <!-- Create colors to pick -->
-        <ul class="list-unstyled" id="color-picker">
-        </ul>
-
-      </div>
+    <div class="container"> 
+        <div id="playerJedi"></div>
+        <div id="textField"></div>
+        <div id="pickJedi"></div>
+        <div id="pickEnemyJedi"></div>
     </div>
-  </div>
 
-  <script>
+    <script>
 
     // JavaScript function that wraps everything
     $(document).ready(function() 
@@ -106,10 +89,10 @@
             switch(name)
             {
                 case "Obi-Wan Kenobi":
-                    return new jedi("Obi-Wan Kenobi");
+                    return new jedi("Obi-Wan Kenobi", "Assets/Images/obiwan.jpg");
                     break;
                 case "Luke Skywalker":
-                    return new jedi("Luke Skywalker");
+                    return new jedi("Luke Skywalker", "Assets/Images/lukeskywalker.jpg");
                     break;
                 case "Darth Vader":
                     return new jedi("Darth Vader");
@@ -141,6 +124,7 @@
         function load()
         {
             populatePickList(jediList);
+            init();
             gameState = "pickChar";
             draw();
         }
@@ -156,20 +140,60 @@
         
         function reset()
         {
-            jediList.set(playerJedi.name, playerJedi);
+            playerJedi = null;
+            init();
             for(let i of jediList.values())
             {
                 i.reInit();
             }
-
-            playerJedi = null;
-            init();
             gameState = "pickChar";
         }
 
         function draw()
         {
+            switch(gameState)
+            {
+                case "pickChar":
+                    for(let i of pickableJedi.values())
+                    {
+                        $("#pickJedi").append("<img src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
+                    }
+                    $("#textField").text("Pick Your Jedi");
+                    
+                    //disable other graphics
+                    $("#playerJedi").empty();
+                    $("#enemyJedi").empty();
+                    $("#pickEnemyJedi").empty();
+                    break;
+                case "pickAttacker":
+                    
+                    $("#playerJedi").append("<img src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">");
+                    for(let i of pickableJedi.values())
+                    {
+                        $("#pickEnemyJedi").append("<img src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
+                    }
 
+                    $("#textField").text("Pick your enemy");
+                    $("#enemyJedi").empty();
+                    $("#pickJedi").empty();
+                    break;
+                case "fight":
+                    for(let i of pickableJedi.values())
+                    {
+                        $("#pickEnemyJedi").append("<img src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
+                    }
+                    $("#playerJedi").append("<img src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">");
+
+                    $("#enemyJedi").append("<img src=\"" + curEnemy.image + "\" jediName=\"" + curEnemy.name + "\">");
+                    $("#textField").text("Fight your enemy");
+                    $("#pickJedi").empty();
+                    break;
+                case "win":
+                    break;
+                case "loss":
+                    break;
+            }
+                
         }
 
         load();
@@ -179,7 +203,7 @@
         {
             if(gameState == "pickChar")
             {
-                var jedi = $(event.target).attr("jediName");
+                var jedi = $(event.target).attr("jediname");
                 playerJedi = pickJedi(jedi, pickableJedi);
                 gameState = "pickAttacker";
                 draw();
@@ -190,9 +214,9 @@
         {
             if(gameState == "pickAttacker")
             {
-                var jedi = $(event.target).attr("jediName");
+                var jedi = $(event.target).attr("jediname");
                 curEnemy = pickJedi(jedi, pickableJedi);
-                gameState = "Fight";
+                gameState = "fight";
                 draw();
             }
         });
@@ -240,9 +264,8 @@
             }
         });
 
-        //reset();
     });
 
-  </script>
+    </script>
 </body>
 </html>
