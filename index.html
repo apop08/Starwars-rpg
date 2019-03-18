@@ -50,36 +50,44 @@
     $(document).ready(function() 
     {
         var jediList = new Map();
-        var playerJedi;
+        var playerJedi = null;
 
-        function jedi(initName = "", initImage = "", initHp = 0, initAttack = 0, initCounterAtk = 0)
+        function jedi(initName = "", initImage = "", initStartHp = 0, initAttack = 0, initCounterAtk = 0)
         {
             this.name = initName;
             this.image = initImage;
-            this.hp = initHp;
+            this.startHp = initStartHp;
+            this.hp = initStartHp;
             this.baseAtk = initAttack;
-            this.totalAtk = initAttack;
+            this.currentAtk = initAttack;
             this.counterAtk = initCounterAtk;
             this.isDead = function()
             {
-                if(this.hp == 0)
+                if(this.hp <= 0)
                 {
                     return true;
                 }
                 return false;
             };
 
+            this.reInit = function()
+            {
+                this.hp = this.startHp;
+                this.currentAtk = this.baseAtk;
+            
+            };
+
             this.attack = function()
             {
-                var temp = this.totalAtk;
-                this.totalAtk += this.baseAtk;
+                var temp = tcurrent;
+                this.currentAtk += this.baseAtk;
                 return temp;
             };
 
             this.counter = function()
             {
                 return this.counterAtk;
-            }
+            };
 
             this.takeDmg = function(atk)
             {
@@ -132,17 +140,28 @@
         {
             populatePickList(jediList);
         }
+
+        function init(jediString)
+        {
+            return pickJedi(jediString, jediList);
+        }
         
         function reset()
         {
-            jediList.clear();
-            populatePickList(jediList);
+            jediList.set(playerJedi.name, playerJedi);
+            for(let i of jediList.values())
+            {
+                i.reInit();
+            }
+
+            playerJedi = null;
         }
         
         load();
-        playerJedi = pickJedi("Luke Skywalker", jediList);
 
-      reset();
+        playerJedi = init("Luke Skywalker");
+
+        reset();
     });
 
   </script>
