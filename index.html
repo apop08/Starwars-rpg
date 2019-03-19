@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <title>Correct Color Picker</title>
 
+  <link rel="stylesheet" href="Assets/CSS/reset.css">
   <!-- Bootstrap File -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-
+  <link rel="stylesheet" href="Assets/CSS/style.css">
   <!-- JQuery -->
   <script src="https://code.jquery.com/jquery.js"></script>
 
@@ -21,14 +22,20 @@
 <body>
 
     <div class="container"> 
-        <div id="playerJedi"></div>
-        <div id="textField"></div>
-        <div id="enemyJedi"></div>
-        <button id ="fight">FIGHT</button>
-        <div id="textField2"></div>
-        
-        <div id="pickJedi"></div>
-        <div id="pickEnemyJedi"></div>
+        <div class="row justify-content-center"><div class="col-4"  id="playerJedi"></div></div>
+        <div class="row justify-content-center"><div class="col-4 text"  id="textField"></div></div>
+        <div class="row justify-content-center"><div class="col-4"  id="enemyJedi"></div></div>
+        <div class="row justify-content-center"><div class="col-4"><button class="button" id="fight">FIGHT</button></div></div>
+        <div class="row justify-content-center" id="replay"><div class="col-4"><button class="button">Replay</button></div></div>
+        <div class="row justify-content-center"><div class="col-4 text"  id="textField2"></div></div>
+        <div class="row justify-content-center" id="pickJedi"><div class="col-3"  id="pickJedi0"></div>
+                                                              <div class="col-3"  id="pickJedi1"></div>
+                                                              <div class="col-3"  id="pickJedi2"></div>
+                                                              <div class="col-3"  id="pickJedi3"></div></div>
+
+        <div class="row justify-content-center" id="pickEnemyJedi"><div class="col-4"  id="pickEnemyJedi0"></div>
+                                                                   <div class="col-4"  id="pickEnemyJedi1"></div>
+                                                                   <div class="col-4"  id="pickEnemyJedi2"></div></div>
         
     </div>
 
@@ -51,6 +58,7 @@
             this.baseAtk = initAttack;
             this.currentAtk = initAttack;
             this.counterAtk = initCounterAtk;
+            
             this.isDead = function()
             {
                 if(this.hp <= 0)
@@ -94,17 +102,13 @@
             switch(name)
             {
                 case "Obi-Wan Kenobi":
-                    return new jedi("Obi-Wan Kenobi", "Assets/Images/obiwan.jpg");
-                    break;
+                    return new jedi("Obi-Wan Kenobi", "Assets/Images/obiwan.jpg", 125, 3, 5);
                 case "Luke Skywalker":
-                    return new jedi("Luke Skywalker", "Assets/Images/lukeskywalker.jpg");
-                    break;
+                    return new jedi("Luke Skywalker", "Assets/Images/lukeskywalker.jpg", 145, 3, 3);
                 case "Darth Vader":
-                    return new jedi("Darth Vader", "Assets/Images/darthvader.jpg");
-                    break;
+                    return new jedi("Darth Vader", "Assets/Images/darthvader.jpg", 150, 1, 4);
                 case "Darth Maul":
-                    return new jedi("Darth Maul", "Assets/Images/darthmaul.jpg");
-                    break;
+                    return new jedi("Darth Maul", "Assets/Images/darthmaul.jpg", 160, 2, 3);
                 default:
                     return "Error jedi not found";
             }
@@ -156,38 +160,51 @@
 
         function clearScreen()
         {
-            $("#pickJedi").empty();
+            $("#pickJedi0").empty();
+            $("#pickJedi1").empty();
+            $("#pickJedi2").empty();
+            $("#pickJedi3").empty();
             $("#playerJedi").empty();
             $("#enemyJedi").empty();
-            $("#pickEnemyJedi").empty();
+            $("#pickEnemyJedi0").empty();
+            $("#pickEnemyJedi1").empty();
+            $("#pickEnemyJedi2").empty();
             $("#textField").empty();
             $("#textField2").empty();
             $("#fight").hide();
+            $("#replay").hide();
         }
         
         function draw()
         {
             clearScreen();
+            var j = 0;
             switch(gameState)
             {
+                
                 case "pickChar":
                     
                     for(let i of pickableJedi.values())
                     {
-                        $("#pickJedi").append("<img src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
+                        $("#pickJedi" + j).append("<img class=\"jedi\" src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
+                        $("#pickJedi" + j).append("<div class=\"label\">HP:" + i.hp + "</div>");
+                        ++j;
                     }
                     $("#textField").text("Pick Your Jedi");
                     
-                    //disable other graphics
 
                     break;
 
                 case "pickAttacker":
 
-                    $("#playerJedi").append("<img src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">");
+                    $("#playerJedi").append("<img class=\"jedi\" src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">" +
+                                            "<div class=\"label\">HP:" + playerJedi.hp + "</div>");
+                    
                     for(let i of pickableJedi.values())
                     {
-                        $("#pickEnemyJedi").append("<img src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
+                        $("#pickEnemyJedi" + j).append("<img class=\"jedi\" src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
+                        $("#pickEnemyJedi" + j).append("<div class=\"label\">HP:" + i.hp + "</div>");
+                        ++j;
                     }
 
                     $("#textField").text("Pick your enemy");
@@ -197,19 +214,27 @@
                     $("#fight").show();
                     for(let i of pickableJedi.values())
                     {
-                        $("#pickEnemyJedi").append("<img src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
+                        $("#pickEnemyJedi" + j).append("<img class=\"jedi\" src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
+                        $("#pickEnemyJedi" + j).append("<div class=\"label\">HP:" + i.hp + "</div>");
+                        j++
                     }
-                    $("#playerJedi").append("<img src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">");
+                    $("#playerJedi").append("<img class=\"jedi\" src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">");
+                    $("#playerJedi").append("<div class=\"label\">HP:" + playerJedi.hp + "</div>");
 
-                    $("#enemyJedi").append("<img src=\"" + curEnemy.image + "\" jediName=\"" + curEnemy.name + "\">");
+                    $("#enemyJedi").append("<img class=\"jedi\" src=\"" + curEnemy.image + "\" jediName=\"" + curEnemy.name + "\">");
+                    $("#enemyJedi").append("<div class=\"label\">HP:" + curEnemy.hp + "</div>");
                     $("#textField").text("Versus");
                     $("#textField2").text("Enemies remaining");
                     break;
 
                 case "win":
+                    $("#textField").text("You Win, Replay?");
+                    $("#replay").show();
                     break;
 
                 case "loss":
+                    $("#textField").text("You Lose, Replay?");
+                    $("#replay").show();
                     break;
             }
                 
