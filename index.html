@@ -23,11 +23,17 @@
 
     <div class="container"> 
         <div class="row justify-content-center"><div class="col-4"  id="playerJedi"></div></div>
+
         <div class="row justify-content-center"><div class="col-4 text"  id="textField"></div></div>
+
         <div class="row justify-content-center"><div class="col-4"  id="enemyJedi"></div></div>
+
         <div class="row justify-content-center"><div class="col-4"><button class="button" id="fight">FIGHT</button></div></div>
+
         <div class="row justify-content-center" id="replay"><div class="col-4"><button class="button">Replay</button></div></div>
+
         <div class="row justify-content-center"><div class="col-4 text"  id="textField2"></div></div>
+
         <div class="row justify-content-center" id="pickJedi"><div class="col-3"  id="pickJedi0"></div>
                                                               <div class="col-3"  id="pickJedi1"></div>
                                                               <div class="col-3"  id="pickJedi2"></div>
@@ -44,11 +50,14 @@
     // JavaScript function that wraps everything
     $(document).ready(function() 
     {
-        var jediList = new Map();
-        var playerJedi = null;
-        var gameState = "";
-        var curEnemy = null;
-        var pickableJedi = new Map();
+        var gameInfo = {
+            jediList: new Map(),
+            playerJedi: null,
+            gameState: "",
+            curEnemy: null,
+            pickableJedi: new Map()
+        };
+        
         function jedi(initName = "", initImage = "", initStartHp = 0, initAttack = 0, initCounterAtk = 0)
         {
             this.name = initName;
@@ -132,30 +141,30 @@
 
         function load()
         {
-            populatePickList(jediList);
+            populatePickList(gameInfo.jediList);
             init();
-            gameState = "pickChar";
-            draw();
+            gameInfo.gameState = "pickChar";
+            draw(gameInfo.gameState);
         }
 
         function init()
         {
-            for(let i of jediList)
+            for(let i of gameInfo.jediList)
             {
-                pickableJedi.set(i[0], i[1]);
+                gameInfo.pickableJedi.set(i[0], i[1]);
             }
             
         }
         
         function reset()
         {
-            playerJedi = null;
+            gameInfo.playerJedi = null;
             init();
-            for(let i of jediList.values())
+            for(let i of gameInfo.jediList.values())
             {
                 i.reInit();
             }
-            gameState = "pickChar";
+            gameInfo.gameState = "pickChar";
         }
 
         function clearScreen()
@@ -175,19 +184,19 @@
             $("#replay").hide();
         }
         
-        function draw()
+        function draw(gS)
         {
             clearScreen();
             var j = 0;
-            switch(gameState)
+            switch(gS)
             {
                 
                 case "pickChar":
                     
-                    for(let i of pickableJedi.values())
+                    for(let i of gameInfo.pickableJedi.values())
                     {
                         $("#pickJedi" + j).append("<img class=\"jedi\" src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
-                        $("#pickJedi" + j).append("<div class=\"label\">HP:" + i.hp + "</div>");
+                        $("#pickJedi" + j).append("<div class=\"label\">Name: " + i.name + "<br>HP: " + i.hp + "</div>");
                         ++j;
                     }
                     $("#textField").text("Pick Your Jedi");
@@ -197,13 +206,13 @@
 
                 case "pickAttacker":
 
-                    $("#playerJedi").append("<img class=\"jedi\" src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">" +
-                                            "<div class=\"label\">HP:" + playerJedi.hp + "</div>");
-                    
-                    for(let i of pickableJedi.values())
+                    $("#playerJedi").append("<img class=\"jedi\" src=\"" + gameInfo.playerJedi.image + "\" jediName=\"" + gameInfo.playerJedi.name + "\">");
+                    $("#playerJedi").append("<div class=\"label\">Name: " + gameInfo.playerJedi.name + "<br>HP: " + gameInfo.playerJedi.hp + "</div>");
+
+                    for(let i of gameInfo.pickableJedi.values())
                     {
                         $("#pickEnemyJedi" + j).append("<img class=\"jedi\" src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
-                        $("#pickEnemyJedi" + j).append("<div class=\"label\">HP:" + i.hp + "</div>");
+                        $("#pickEnemyJedi" + j).append("<div class=\"label\">Name: " + i.name + "<br>HP: " + i.hp + "</div>");
                         ++j;
                     }
 
@@ -212,17 +221,17 @@
 
                 case "fight":
                     $("#fight").show();
-                    for(let i of pickableJedi.values())
+                    for(let i of gameInfo.pickableJedi.values())
                     {
                         $("#pickEnemyJedi" + j).append("<img class=\"jedi\" src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
-                        $("#pickEnemyJedi" + j).append("<div class=\"label\">HP:" + i.hp + "</div>");
+                        $("#pickEnemyJedi" + j).append("<div class=\"label\">Name: " + i.name + "<br>HP: " + i.hp + "</div>");
                         j++
                     }
-                    $("#playerJedi").append("<img class=\"jedi\" src=\"" + playerJedi.image + "\" jediName=\"" + playerJedi.name + "\">");
-                    $("#playerJedi").append("<div class=\"label\">HP:" + playerJedi.hp + "</div>");
+                    $("#playerJedi").append("<img class=\"jedi\" src=\"" + gameInfo.playerJedi.image + "\" jediName=\"" + gameInfo.playerJedi.name + "\">");
+                    $("#playerJedi").append("<div class=\"label\">Name: " + gameInfo.playerJedi.name + "<br>HP: " + gameInfo.playerJedi.hp + "</div>");
 
-                    $("#enemyJedi").append("<img class=\"jedi\" src=\"" + curEnemy.image + "\" jediName=\"" + curEnemy.name + "\">");
-                    $("#enemyJedi").append("<div class=\"label\">HP:" + curEnemy.hp + "</div>");
+                    $("#enemyJedi").append("<img class=\"jedi\" src=\"" + gameInfo.curEnemy.image + "\" jediName=\"" + gameInfo.curEnemy.name + "\">");
+                    $("#enemyJedi").append("<div class=\"label\">Name: " + gameInfo.curEnemy.name + "<br>HP: " + gameInfo.curEnemy.hp + "</div>");
                     $("#textField").text("Versus");
                     $("#textField2").text("Enemies remaining");
                     break;
@@ -245,49 +254,47 @@
 
         $("#pickJedi").click(function(event) 
         {
-            if(gameState == "pickChar")
+            if(gameInfo.gameState == "pickChar")
             {
                 var jedi = $(event.target).attr("jediname");
-                playerJedi = pickJedi(jedi, pickableJedi);
-                gameState = "pickAttacker";
-                draw();
+                gameInfo.playerJedi = pickJedi(jedi, gameInfo.pickableJedi);
+                gameInfo.gameState = "pickAttacker";
+                draw(gameInfo.gameState);
             }
         });
 
         $("#pickEnemyJedi").click(function(event) 
         {
-            if(gameState == "pickAttacker")
+            if(gameInfo.gameState == "pickAttacker")
             {
                 var jedi = $(event.target).attr("jediname");
-                curEnemy = pickJedi(jedi, pickableJedi);
-                gameState = "fight";
-                draw();
+                gameInfo.curEnemy = pickJedi(jedi, gameInfo.pickableJedi);
+                gameInfo.gameState = "fight";
+                draw(gameInfo.gameState);
             }
         });
 
         $("#fight").click(function(event) 
         {
-            if(gameState == "fight")
+            if(gameInfo.gameState == "fight")
             {
-                if(curEnemy.takeDmg(playerJedi.attack()))
+                if(gameInfo.curEnemy.takeDmg(gameInfo.playerJedi.attack()))
                 {
-                    if(pickableJedi.size == 0)
+                    if(gameInfo.pickableJedi.size == 0)
                     {
-                        gameState = "win";
+                        gameInfo.gameState = "win";
                     }
                     else
                     {
-                        gameState = "pickAttacker";
+                        gameInfo.gameState = "pickAttacker";
                     }
                     
                 }
-                else if(playerJedi.takeDmg(curEnemy.counter()))
+                else if(gameInfo.playerJedi.takeDmg(gameInfo.curEnemy.counter()))
                 {
-                    gameState = "loss";
+                    gameInfo.gameState = "loss";
                 }
-                console.log(playerJedi.hp);
-                console.log(curEnemy.hp);
-                draw();
+                draw(gameInfo.gameState);
             }
         });
 
@@ -295,7 +302,7 @@
         $("#replay").click(function(event) 
         {
             reset();
-            draw();
+            draw(gameInfo.gameState);
         });
 
         $("#pickEnemy").click(function(event) 
@@ -303,9 +310,9 @@
             if(gameState == "pickAttacker")
             {
                 var jedi = $(event.target).attr("jediName");
-                curEnemy = pickJedi(jedi, pickableJedi);
-                gameState = "Fight";
-                draw();
+                gameInfo.curEnemy = pickJedi(jedi, gameInfo.pickableJedi);
+                gameInfo.gameState = "Fight";
+                draw(gameInfo.gameState);
             }
         });
 

@@ -18,6 +18,17 @@
     background-color:rgba(0, 0, 0, .5);
     color: rgba(255,255,255,1);
     text-align: center;
+    transform: translate(-50%, -50%);
+}
+.label2 {
+    
+    width:100%;
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    background-color:rgba(0, 0, 0, .5);
+    color: rgba(255,255,255,1);
+    text-align: center;
     transform: translate(-50%, -20%);
 }
 body{
