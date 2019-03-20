@@ -257,9 +257,27 @@
             if(gameInfo.gameState == "pickChar")
             {
                 var jedi = $(event.target).attr("jediname");
-                gameInfo.playerJedi = pickJedi(jedi, gameInfo.pickableJedi);
-                gameInfo.gameState = "pickAttacker";
-                draw(gameInfo.gameState);
+                if(jedi)
+                {
+                    gameInfo.playerJedi = pickJedi(jedi, gameInfo.pickableJedi);
+                    gameInfo.gameState = "pickAttacker";
+                    draw(gameInfo.gameState);
+                }
+                
+            }
+        });
+
+        $("#pickEnemy").click(function(event) 
+        {
+            if(gameState == "pickAttacker")
+            {
+                var jedi = $(event.target).attr("jediName");
+                if(jedi)
+                {
+                    gameInfo.curEnemy = pickJedi(jedi, gameInfo.pickableJedi);
+                    gameInfo.gameState = "Fight";
+                    draw(gameInfo.gameState);
+                }
             }
         });
 
@@ -268,9 +286,12 @@
             if(gameInfo.gameState == "pickAttacker")
             {
                 var jedi = $(event.target).attr("jediname");
-                gameInfo.curEnemy = pickJedi(jedi, gameInfo.pickableJedi);
-                gameInfo.gameState = "fight";
-                draw(gameInfo.gameState);
+                if(jedi)
+                {
+                    gameInfo.curEnemy = pickJedi(jedi, gameInfo.pickableJedi);
+                    gameInfo.gameState = "fight";
+                    draw(gameInfo.gameState);
+                }
             }
         });
 
@@ -305,16 +326,7 @@
             draw(gameInfo.gameState);
         });
 
-        $("#pickEnemy").click(function(event) 
-        {
-            if(gameState == "pickAttacker")
-            {
-                var jedi = $(event.target).attr("jediName");
-                gameInfo.curEnemy = pickJedi(jedi, gameInfo.pickableJedi);
-                gameInfo.gameState = "Fight";
-                draw(gameInfo.gameState);
-            }
-        });
+        
 
     });
 
