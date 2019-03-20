@@ -61,13 +61,19 @@
         function jedi(initName = "", initImage = "", initStartHp = 0, initAttack = 0, initCounterAtk = 0)
         {
             this.name = initName;
-            this.image = initImage;
+            this.image = initImage
             this.startHp = initStartHp;
             this.hp = initStartHp;
             this.baseAtk = initAttack;
             this.currentAtk = initAttack;
             this.counterAtk = initCounterAtk;
             
+            this.print = function()
+            {
+                return "<img class=\"jedi\" src=\"" + this.image + "\" jediName=\"" + this.name + "\">" +
+                       "<div class=\"label\">Name: " + this.name + "<br>HP: " + this.hp + "</div>";
+            };
+
             this.isDead = function()
             {
                 if(this.hp <= 0)
@@ -144,7 +150,6 @@
             populatePickList(gameInfo.jediList);
             init();
             gameInfo.gameState = "pickChar";
-            draw(gameInfo.gameState);
         }
 
         function init()
@@ -195,9 +200,7 @@
                     
                     for(let i of gameInfo.pickableJedi.values())
                     {
-                        $("#pickJedi" + j).append("<img class=\"jedi\" src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
-                        $("#pickJedi" + j).append("<div class=\"label\">Name: " + i.name + "<br>HP: " + i.hp + "</div>");
-                        ++j;
+                        $("#pickJedi" + j++).append(i.print());
                     }
                     $("#textField").text("Pick Your Jedi");
                     
@@ -206,14 +209,12 @@
 
                 case "pickAttacker":
 
-                    $("#playerJedi").append("<img class=\"jedi\" src=\"" + gameInfo.playerJedi.image + "\" jediName=\"" + gameInfo.playerJedi.name + "\">");
-                    $("#playerJedi").append("<div class=\"label\">Name: " + gameInfo.playerJedi.name + "<br>HP: " + gameInfo.playerJedi.hp + "</div>");
+                    $("#playerJedi").append(gameInfo.playerJedi.print());
+
 
                     for(let i of gameInfo.pickableJedi.values())
                     {
-                        $("#pickEnemyJedi" + j).append("<img class=\"jedi\" src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
-                        $("#pickEnemyJedi" + j).append("<div class=\"label\">Name: " + i.name + "<br>HP: " + i.hp + "</div>");
-                        ++j;
+                        $("#pickEnemyJedi" + j++).append(i.print());
                     }
 
                     $("#textField").text("Pick your enemy");
@@ -223,15 +224,11 @@
                     $("#fight").show();
                     for(let i of gameInfo.pickableJedi.values())
                     {
-                        $("#pickEnemyJedi" + j).append("<img class=\"jedi\" src=\"" + i.image + "\" jediName=\"" + i.name + "\">");
-                        $("#pickEnemyJedi" + j).append("<div class=\"label\">Name: " + i.name + "<br>HP: " + i.hp + "</div>");
-                        j++
+                        $("#pickEnemyJedi" + j++).append(i.print());
                     }
-                    $("#playerJedi").append("<img class=\"jedi\" src=\"" + gameInfo.playerJedi.image + "\" jediName=\"" + gameInfo.playerJedi.name + "\">");
-                    $("#playerJedi").append("<div class=\"label\">Name: " + gameInfo.playerJedi.name + "<br>HP: " + gameInfo.playerJedi.hp + "</div>");
+                    $("#playerJedi").append(gameInfo.playerJedi.print());
 
-                    $("#enemyJedi").append("<img class=\"jedi\" src=\"" + gameInfo.curEnemy.image + "\" jediName=\"" + gameInfo.curEnemy.name + "\">");
-                    $("#enemyJedi").append("<div class=\"label\">Name: " + gameInfo.curEnemy.name + "<br>HP: " + gameInfo.curEnemy.hp + "</div>");
+                    $("#enemyJedi").append(gameInfo.curEnemy.print());
                     $("#textField").text("Versus");
                     $("#textField2").text("Enemies remaining");
                     break;
@@ -250,7 +247,7 @@
         }
 
         load();
-        init();
+        draw(gameInfo.gameState);
 
         $("#pickJedi").click(function(event) 
         {
