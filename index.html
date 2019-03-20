@@ -28,10 +28,13 @@
 
         <div class="row justify-content-center"><div class="col-4"  id="enemyJedi"></div></div>
 
-        <div class="row justify-content-center"><div class="col-4"><button class="button" id="fight">FIGHT</button></div></div>
+        <div class="row justify-content-center"><div class="col-4" id="fight"><button class="button">FIGHT</button>
+                                                <span class="dmgText" id="dmgTextEnemy"></span>
+                                                <span class="dmgText" id="dmgTextPlayer"></span>
+                                                </div></div>
 
         <div class="row justify-content-center" id="replay"><div class="col-4"><button class="button">Replay</button></div></div>
-
+        
         <div class="row justify-content-center"><div class="col-4 text"  id="textField2"></div></div>
 
         <div class="row justify-content-center" id="pickJedi"><div class="col-3"  id="pickJedi0"></div>
@@ -58,7 +61,7 @@
             pickableJedi: new Map()
         };
         
-        function jedi(initName = "", initImage = "", initStartHp = 0, initAttack = 0, initCounterAtk = 0)
+        function jedi(initName, initImage, initStartHp, initAttack, initCounterAtk)
         {
             this.name = initName;
             this.image = initImage
@@ -89,7 +92,10 @@
                 this.currentAtk = this.baseAtk;
             
             };
-
+            this.getAttack = function()
+            {
+                return this.currentAtk;
+            };
             this.attack = function()
             {
                 var temp = this.currentAtk;
@@ -227,8 +233,9 @@
                         $("#pickEnemyJedi" + j++).append(i.print());
                     }
                     $("#playerJedi").append(gameInfo.playerJedi.print());
-
                     $("#enemyJedi").append(gameInfo.curEnemy.print());
+                    $("#enemyJedi").append();
+
                     $("#textField").text("Versus");
                     $("#textField2").text("Enemies remaining");
                     break;
