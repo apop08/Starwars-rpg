@@ -1,3 +1,13 @@
+/**************************************************************************************************/
+/*!
+@file	StarwarsRPG.js
+@date	3/20/2019
+@authors: Alex Poplawski
+@brief
+The javascript file for the starwars rpg handles all the game logic and drawing
+*/
+/**************************************************************************************************/
+
 // JavaScript function that wraps everything
 $(document).ready(function() 
 {
@@ -134,16 +144,17 @@ $(document).ready(function()
     function createJedi(name)
     {
         // this methodology isnt really relevent for this project since there is only 1 object type were making
+        // I should also look into how the new key word really works and object.create but this works for now
         switch(name)
         {
             case "Obi-Wan Kenobi":
-                return new jedi("Obi-Wan Kenobi", "Assets/Images/obiwan.jpg", 125, 10, 15);
+                return new jedi("Obi-Wan Kenobi", "Assets/Images/obiwan.jpg", 125, 12, 23);
             case "Luke Skywalker":
-                return new jedi("Luke Skywalker", "Assets/Images/lukeskywalker.jpg", 145, 12, 18);
+                return new jedi("Luke Skywalker", "Assets/Images/lukeskywalker.jpg", 145, 11, 21);
             case "Darth Vader":
-                return new jedi("Darth Vader", "Assets/Images/darthvader.jpg", 150, 7, 17);
+                return new jedi("Darth Vader", "Assets/Images/darthvader.jpg", 150, 10, 18);
             case "Darth Maul":
-                return new jedi("Darth Maul", "Assets/Images/darthmaul.jpg", 160, 12, 19);
+                return new jedi("Darth Maul", "Assets/Images/darthmaul.jpg", 160, 9, 19);
             // TODO: Make the error louder instead of a silent fail (assert calls?)
             default:
                 return "Error jedi not defined";
@@ -265,7 +276,7 @@ $(document).ready(function()
                 {
                     $("#pickJedi" + j++).append(i.print());
                 }
-                $("#textField").text("Pick Your Jedi");
+                $("#textField").html("<h1>Pick Your Jedi</h1>");
                 
                 break;
 
@@ -280,7 +291,7 @@ $(document).ready(function()
                     $("#pickEnemyJedi" + j++).append(i.print());
                 }
 
-                $("#textField").text("Pick your enemy");
+                $("#textField").html("<h1>Pick your enemy</h1>");
                 break;
 
             case "fight":
@@ -294,17 +305,17 @@ $(document).ready(function()
                 $("#enemyJedi").append(gameInfo.curEnemy.print());
                 $("#enemyJedi").append();
 
-                $("#textField").text("Versus");
-                $("#textField2").text("Enemies remaining");
+                $("#textField").html("<h1>Versus</h1>");
+                $("#textField2").html("<h1>Enemies remaining</h1>");
                 break;
 
             case "win":
-                $("#textField").text("You Win, Replay?");
+                $("#textField").html("<h1>You Win, Replay?</h1>");
                 $("#replay").show();
                 break;
 
             case "loss":
-                $("#textField").text("You Lose, Replay?");
+                $("#textField").html("<h1>You Lose, Replay?</h1>");
                 $("#replay").show();
                 break;
             default:
