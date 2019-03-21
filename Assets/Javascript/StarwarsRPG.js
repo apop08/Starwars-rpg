@@ -1,9 +1,9 @@
 /**************************************************************************************************/
 /*!
-@file	StarwarsRPG.js
-@date	3/20/2019
-@authors: Alex Poplawski
-@brief
+* file	StarwarsRPG.js
+* date	3/20/2019
+* authors: Alex Poplawski
+* brief
 The javascript file for the starwars rpg handles all the game logic and drawing
 */
 /**************************************************************************************************/
@@ -144,7 +144,7 @@ $(document).ready(function()
     function createJedi(name)
     {
         // this methodology isnt really relevent for this project since there is only 1 object type were making
-        // I should also look into how the new key word really works and object.create but this works for now
+        // I should also look into how the 'new' keyword really works and object.create but this works for now
         switch(name)
         {
             case "Obi-Wan Kenobi":
